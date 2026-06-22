@@ -58,7 +58,7 @@ A dataset-level scanner CLI (`nz-privacy-auditor scan path/to/data.csv`) lands o
 | IRD number          | regex + IR mod-11 (primary + secondary) | HIGH     | ✅ v0.1.0      |
 | NHI number          | regex + Health NZ mod-11 / mod-23        | HIGH     | ✅ v0.2.0      |
 | Driver licence      | regex `[A-Z]{2}\d{6}` + keyword proximity | HIGH     | ✅ v0.3.0      |
-| NZ phone            | `+64` / `0x` patterns, mobile prefixes  | MEDIUM   | ⏳ planned     |
+| NZ phone            | `+64` / `0x` patterns, mobile prefixes  | MEDIUM   | ✅ v0.4.0      |
 | NZ address          | suffix + suburb / region gazetteer      | MEDIUM   | ⏳ planned     |
 | Te reo Māori names  | macron-aware NER + name list            | LOW      | ⏳ planned     |
 | LLM verification    | Gemini second-pass for ambiguous spans  | —        | ⏳ planned     |
