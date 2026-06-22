@@ -7,6 +7,7 @@ examples and from the public IR documentation on IRD number validation.
 from __future__ import annotations
 
 import pytest
+
 from nz_privacy_auditor.detectors.ird import IRDDetector, _checksum_ok
 
 # IR-published worked examples from the official algorithm spec.
