@@ -6,10 +6,24 @@ All notable changes to this project will be documented in this file. Format roug
 
 ### Planned
 
-- LLM verification pass (Gemini 2.5 Flash) for ambiguous spans (te reo names, driver licence, address shape-only).
 - HuggingFace `datasets` loader integration tests (currently the loader is implemented but untested).
 - HTML compliance report.
 - `docs/privacy-act-mapping.md` mapping each detector to specific Information Privacy Principles (IPPs 1–13) and Health Information Privacy Code 2020 references.
+
+## [0.8.0] — 2026-06-22
+
+### Added
+
+- **Gemini LLM verification pass** — second-pass review of low-confidence findings using `gemini-2.5-flash` via `google-genai`. The verifier issues one JSON-mode classification call per finding (asking whether the value is genuinely the claimed PII type *in its surrounding context*), returns a `Verdict` of `confirmed` / `rejected` / `uncertain`, and `apply_verification()` re-scores the `ScanResult`: confirmed promotes confidence to `max(original, 0.95)`, rejected drops the finding, uncertain leaves it in place but annotated. Results are persisted in a SQLite cache at `data/llm_cache/cache.sqlite` so repeat audits do not re-burn quota. 429 / quota errors surface as `QuotaExceededError`; transient errors degrade to `uncertain` rather than aborting the run.
+
+- **CLI flags** — `--verify-llm` and `--llm-threshold` (default 0.8) on the `scan` command. `.env` loading via `python-dotenv` is wired in lazily so the `[llm]` extra is only required when verification is requested.
+
+- **`.env.example`** documenting `GOOGLE_API_KEY`. `.env`, `.env.bak`, and `data/llm_cache/` are gitignored.
+
+### Changed
+
+- `CellFinding` now carries the full cell value so the LLM verifier can use surrounding context. The new field defaults to `""` for backward compatibility.
+- `[llm]` extra now includes `python-dotenv>=1.0` alongside `google-genai>=2.7.0`.
 
 ## [0.7.0] — 2026-06-22
 
@@ -55,6 +69,7 @@ Initial scaffold and first detector.
 - GitHub Actions CI: ruff lint + pytest on Python 3.11 and 3.12.
 - Pre-commit hooks for ruff and basic file hygiene.
 
-[Unreleased]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/compare/v0.1.0...v0.7.0
 [0.1.0]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/releases/tag/v0.1.0

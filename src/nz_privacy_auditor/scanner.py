@@ -42,11 +42,15 @@ def default_detectors() -> list[Detector]:
 
 @dataclass(frozen=True)
 class CellFinding:
-    """A :class:`Finding` enriched with its row index and column name."""
+    """A :class:`Finding` enriched with its row index, column name, and the
+    full cell value (kept so an LLM verification pass can use surrounding
+    context).
+    """
 
     row: int
     column: str
     finding: Finding
+    cell_value: str = ""
 
 
 @dataclass
@@ -118,7 +122,12 @@ class Scanner:
                         if finding.confidence < self.min_confidence:
                             continue
                         result.findings.append(
-                            CellFinding(row=row_idx, column=col, finding=finding)
+                            CellFinding(
+                                row=row_idx,
+                                column=col,
+                                finding=finding,
+                                cell_value=value,
+                            )
                         )
         return result
 

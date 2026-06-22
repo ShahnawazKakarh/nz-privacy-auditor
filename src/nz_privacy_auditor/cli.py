@@ -18,6 +18,7 @@ from . import __version__
 from .loaders import load
 from .report import render_console, to_json
 from .scanner import Scanner, default_detectors
+from .verification import apply_verification
 
 # Map of CLI detector keys to detector classes.
 _DETECTOR_KEYS = {d.name: d.__class__ for d in default_detectors()}
@@ -68,6 +69,23 @@ def main() -> None:
     default=False,
     help="Exit with status 1 if any findings are emitted (useful in CI).",
 )
+@click.option(
+    "--verify-llm",
+    is_flag=True,
+    default=False,
+    help=(
+        "Run a Gemini second-pass over low-confidence findings. "
+        "Requires GOOGLE_API_KEY in the environment (e.g. via .env). "
+        "Cached results are reused from data/llm_cache/cache.sqlite."
+    ),
+)
+@click.option(
+    "--llm-threshold",
+    type=click.FloatRange(0.0, 1.0),
+    default=0.8,
+    show_default=True,
+    help="Only findings with confidence below this threshold are LLM-verified.",
+)
 def scan(
     path: Path,
     output_format: str,
@@ -75,6 +93,8 @@ def scan(
     detectors_csv: str | None,
     min_confidence: float,
     fail_on_finding: bool,
+    verify_llm: bool,
+    llm_threshold: float,
 ) -> None:
     """Scan a dataset for Privacy Act 2020 PII issues."""
     # Resolve detector set
@@ -94,6 +114,27 @@ def scan(
     df = load(path)
     scanner = Scanner(detectors=detectors, min_confidence=min_confidence)
     result = scanner.scan_dataframe(df)
+
+    if verify_llm:
+        # Lazy import + .env load so the [llm] extra is only needed when used.
+        try:
+            from dotenv import load_dotenv
+
+            load_dotenv()
+        except ImportError:
+            pass  # dotenv optional; env vars may already be set
+        try:
+            from .verifiers.gemini import GeminiVerifier
+        except ImportError as exc:
+            raise click.ClickException(
+                "--verify-llm requires the [llm] extra. "
+                "Install with: pip install 'nz-privacy-auditor[llm]'"
+            ) from exc
+        verifier = GeminiVerifier()
+        try:
+            result = apply_verification(result, verifier, threshold=llm_threshold)
+        finally:
+            verifier.close()
 
     if output_format == "json":
         payload = to_json(result)

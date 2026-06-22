@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "nz-privacy-auditor: Privacy Act 2020 compliance auditor for ML datasets"
-version: 0.7.0
+version: 0.8.0
 date-released: 2026-06-22
 authors:
   - family-names: Khan
@@ -33,7 +33,7 @@ preferred-citation:
       given-names: Muhammad Shahnawaz
       orcid: "https://orcid.org/0009-0007-4055-6563"
       affiliation: Independent Researcher
-  version: 0.7.0
+  version: 0.8.0
   year: 2026
   month: 6
   url: "https://github.com/ShahnawazKakarh/nz-privacy-auditor"

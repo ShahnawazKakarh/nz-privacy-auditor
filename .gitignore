@@ -149,6 +149,7 @@ activemq-data/
 
 # Environments
 .env
+.env.bak
 .envrc
 .venv
 env/
@@ -156,6 +157,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# LLM verifier cache
+data/llm_cache/
 
 # Spyder project settings
 .spyderproject
