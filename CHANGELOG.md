@@ -4,9 +4,12 @@ All notable changes to this project will be documented in this file. Format roug
 
 ## [Unreleased]
 
+### Added
+
+- **NHI (National Health Index) detector** — recognises both the legacy `AAANNNC` (mod-11 numeric check digit) and new `AAANNAX` (mod-23 alphabetic check digit) formats per HISO 10046:2024. Uses the 24-letter NHI alphabet (A–Z excluding I and O) with weights `(7, 6, 5, 4, 3, 2)`. Only checksum-validated matches are emitted. Test vectors drawn from Health NZ \| Te Whatu Ora's published format-change examples (`ZAA0067`, `ZAA0075`, `ZAA0083` for legacy; `ACA31FM`, `ASE37QK`, `ARE62RS` for new). Case-insensitive matching with normalised uppercase in the finding context.
+
 ### Planned
 
-- NHI (National Health Index) detector with mod-11 checksum (legacy `[A-Z]{3}\d{4}` and new `[A-Z]{3}\d{3}[A-Z0-9]` formats).
 - NZ driver licence detector (`[A-Z]{2}\d{6}` with context window).
 - NZ phone detector (`+64`, `0x`, mobile prefixes `021/022/027`).
 - NZ address detector (street suffix + suburb / region gazetteer).
