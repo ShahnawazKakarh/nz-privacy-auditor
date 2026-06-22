@@ -4,11 +4,20 @@ All notable changes to this project will be documented in this file. Format roug
 
 ## [Unreleased]
 
+### Added
+
+- **`docs/privacy-act-mapping.md`** — maps each detector to specific Information Privacy Principles (IPP 1–13) of the Privacy Act 2020 and to clauses of the Health Information Privacy Code 2020. Includes a dedicated section on IPP 12 (cross-border disclosure) implications when `--verify-llm` is used, plus references to Te Mana Raraunga and the Algorithm Charter for Aotearoa New Zealand.
+
+### Changed
+
+- **README rewrite** — polished for the v0.8.0 milestone: badge row including tests-passing and Privacy Act badges; "Why this exists" section with a gap-analysis table against Presidio / scrubadub / Purview; full feature matrix with severity, confidence policy, and `since` version per detector; real CLI worked example showing the SKU-vs-driver-licence case before and after `--verify-llm`; CLI reference; comparison table; BibTeX block.
+
 ### Planned
 
-- HuggingFace `datasets` loader integration tests (currently the loader is implemented but untested).
-- HTML compliance report.
-- `docs/privacy-act-mapping.md` mapping each detector to specific Information Privacy Principles (IPPs 1–13) and Health Information Privacy Code 2020 references.
+- HuggingFace `datasets` loader integration tests (the loader is implemented but only smoke-tested).
+- HuggingFace Space (Gradio) demo so the auditor can be tried without local installation, with optional user-supplied Gemini key for the LLM pass.
+- HTML compliance report (in addition to the existing JSON / Rich console output).
+- Zenodo release + DOI minting at the v0.8.0 tag.
 
 ## [0.8.0] — 2026-06-22
 
