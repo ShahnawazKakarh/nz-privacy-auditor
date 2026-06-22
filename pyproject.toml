@@ -1,0 +1,87 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nz-privacy-auditor"
+version = "0.1.0"
+description = "Privacy Act 2020 compliance auditor for ML datasets — scans CSV / Parquet / HuggingFace datasets and flags NZ-specific PII (IRD, NHI, driver licence, phone, address, te reo names)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Muhammad Shahnawaz Khan", email = "shahnawaz.jrw@gmail.com" },
+]
+keywords = [
+    "privacy-act-2020",
+    "new-zealand",
+    "pii-detection",
+    "ml-datasets",
+    "data-governance",
+    "compliance",
+    "ird-number",
+    "nhi-number",
+    "te-reo-maori",
+    "responsible-ai",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security",
+]
+dependencies = [
+    "pandas>=2.0",
+    "pyarrow>=14.0",
+    "rich>=13.0",
+    "click>=8.1",
+]
+
+[project.optional-dependencies]
+ner = [
+    "spacy>=3.7",
+]
+llm = [
+    "google-genai>=2.7.0",
+]
+hf = [
+    "datasets>=2.18",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+]
+all = [
+    "nz-privacy-auditor[ner,llm,hf,dev]",
+]
+
+[project.scripts]
+nz-privacy-auditor = "nz_privacy_auditor.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ShahnawazKakarh/nz-privacy-auditor"
+Issues = "https://github.com/ShahnawazKakarh/nz-privacy-auditor/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/nz_privacy_auditor"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "SIM"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --strict-markers"
