@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. Format roug
 
 ### Added
 
+- **NZ address detector** — flags values that look like NZ street addresses by combining three signals: (1) street-suffix shape (number + 1–4 words + recognised suffix such as `Street`, `Road`, `Avenue`, `Drive`, `Quay`, plus abbreviations `St`, `Rd`, `Ave`, `Tce`, etc., with optional unit prefix like `5/123` and unit letters like `12A`); (2) NZ 4-digit postcode anywhere in the value; (3) NZ region / city / suburb gazetteer (16 regions, ~25 major cities/towns, ~40 common metropolitan suburbs in Auckland, Wellington, and Christchurch). Signals from inside the address span itself are excluded. Confidence scales from 0.5 (shape only) to 0.7 (shape + one signal) to 0.9 (shape + postcode + location). Severity is MEDIUM as quasi-identifier under the Privacy Act 2020.
+
 - **NZ phone detector** — recognises NZ phone numbers in international (`+64`, `0064`) and national (`0` trunk) formats with permissive separators (spaces, hyphens, dots, parentheses). The detector strips separators and prefixes, then validates the National Significant Number against the New Zealand Numbering Plan: mobile (`2X`, NSN 8–10 digits), geographic landline (areas 3, 4, 6, 7, 9; NSN 8 digits), toll-free (`0800`, `0508`; NSN 9–10 digits), and premium-rate (`0900`; NSN 8–9 digits). Findings carry the canonical E.164 form and the phone-kind label. Confidence is 1.0 with an explicit country code and 0.8 for national-form matches. Severity is MEDIUM (quasi-identifier under the Privacy Act 2020). Exposes a `to_e164()` helper for downstream normalisation.
 
 - **Driver licence detector** — recognises NZ Waka Kotahi | NZ Transport Agency driver licence numbers in the format `[A-Z]{2}\d{6}` (e.g. `BQ739482`). NZTA does not publish a check-digit algorithm, so the detector applies a 300-character keyword-proximity heuristic (matching the Microsoft Purview NZ DLP rule): findings near keywords *licence*, *license*, *driver*, *DL* (uppercase), *NZTA*, or *Waka Kotahi* receive confidence 0.9; bare pattern matches receive confidence 0.5. 12 tests covering keyword variants, proximity boundary, case sensitivity, and shape rejection.
@@ -14,7 +16,6 @@ All notable changes to this project will be documented in this file. Format roug
 
 ### Planned
 
-- NZ address detector (street suffix + suburb / region gazetteer).
 - Te reo Māori name detector (macron-aware NER + curated name list).
 - LLM verification pass (Gemini 2.5 Flash) for ambiguous spans.
 - Loaders for CSV, Parquet, and HuggingFace datasets.
