@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file. Format roug
 
 ### Added
 
+- **Te reo Māori name detector** — detects predominantly Māori given names and surnames from a curated gazetteer (~85 given names, ~60 surnames) with macron-aware fuzzy matching. Both the canonical form (`Tāne`, `Wikitōria`, `Te Heuheu`) and the macron-stripped form (`Tane`, `Wikitoria`) match the same entry. Confidence is 0.9 when the input preserved macrons (a signal of cultural care in data entry) and 0.7 otherwise. Multi-word names (`Te Heuheu`, `Te Aroha`, `Te Atatū`) are supported via longest-match alternation. Findings include a `kind` classification (`given`, `surname`, or `given_or_surname` when the same name appears in both lists). Severity is LOW because a personal name alone is not necessarily identifying under the Privacy Act 2020; the signal exists so auditors can apply additional IPP 4 and IPP 8 care to records containing culturally significant te reo Māori identifiers.
+
 - **NZ address detector** — flags values that look like NZ street addresses by combining three signals: (1) street-suffix shape (number + 1–4 words + recognised suffix such as `Street`, `Road`, `Avenue`, `Drive`, `Quay`, plus abbreviations `St`, `Rd`, `Ave`, `Tce`, etc., with optional unit prefix like `5/123` and unit letters like `12A`); (2) NZ 4-digit postcode anywhere in the value; (3) NZ region / city / suburb gazetteer (16 regions, ~25 major cities/towns, ~40 common metropolitan suburbs in Auckland, Wellington, and Christchurch). Signals from inside the address span itself are excluded. Confidence scales from 0.5 (shape only) to 0.7 (shape + one signal) to 0.9 (shape + postcode + location). Severity is MEDIUM as quasi-identifier under the Privacy Act 2020.
 
 - **NZ phone detector** — recognises NZ phone numbers in international (`+64`, `0064`) and national (`0` trunk) formats with permissive separators (spaces, hyphens, dots, parentheses). The detector strips separators and prefixes, then validates the National Significant Number against the New Zealand Numbering Plan: mobile (`2X`, NSN 8–10 digits), geographic landline (areas 3, 4, 6, 7, 9; NSN 8 digits), toll-free (`0800`, `0508`; NSN 9–10 digits), and premium-rate (`0900`; NSN 8–9 digits). Findings carry the canonical E.164 form and the phone-kind label. Confidence is 1.0 with an explicit country code and 0.8 for national-form matches. Severity is MEDIUM (quasi-identifier under the Privacy Act 2020). Exposes a `to_e164()` helper for downstream normalisation.
@@ -16,7 +18,6 @@ All notable changes to this project will be documented in this file. Format roug
 
 ### Planned
 
-- Te reo Māori name detector (macron-aware NER + curated name list).
 - LLM verification pass (Gemini 2.5 Flash) for ambiguous spans.
 - Loaders for CSV, Parquet, and HuggingFace datasets.
 - CLI: `nz-privacy-auditor scan path/to/data.csv`.
