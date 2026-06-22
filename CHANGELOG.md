@@ -4,7 +4,24 @@ All notable changes to this project will be documented in this file. Format roug
 
 ## [Unreleased]
 
+### Planned
+
+- LLM verification pass (Gemini 2.5 Flash) for ambiguous spans (te reo names, driver licence, address shape-only).
+- HuggingFace `datasets` loader integration tests (currently the loader is implemented but untested).
+- HTML compliance report.
+- `docs/privacy-act-mapping.md` mapping each detector to specific Information Privacy Principles (IPPs 1–13) and Health Information Privacy Code 2020 references.
+
+## [0.7.0] — 2026-06-22
+
 ### Added
+
+- **Dataset-level Scanner** — `Scanner` class walks every object-dtype column of a DataFrame and applies each configured detector to each cell, producing a `ScanResult` with per-cell `CellFinding`s and aggregate counts by detector, severity, and column. Supports a custom detector subset and a `min_confidence` filter.
+
+- **Loaders** — `nz_privacy_auditor.loaders.load(path)` dispatches on file extension to CSV / TSV / Parquet readers, returning a `pandas.DataFrame`. An optional HuggingFace `datasets` loader (`loaders.hf.load_hf`) is also provided behind the `[hf]` extra.
+
+- **Report renderers** — `to_dict`, `to_json`, and `render_console` (Rich table) for `ScanResult`. JSON output includes both per-finding rows and summary statistics.
+
+- **CLI** — `nz-privacy-auditor scan <path>` with `--format console|json`, `--output <file>`, `--detector <names>`, `--min-confidence`, and `--fail-on-finding` (exits 1 if any PII found, suitable for CI gating).
 
 - **Te reo Māori name detector** — detects predominantly Māori given names and surnames from a curated gazetteer (~85 given names, ~60 surnames) with macron-aware fuzzy matching. Both the canonical form (`Tāne`, `Wikitōria`, `Te Heuheu`) and the macron-stripped form (`Tane`, `Wikitoria`) match the same entry. Confidence is 0.9 when the input preserved macrons (a signal of cultural care in data entry) and 0.7 otherwise. Multi-word names (`Te Heuheu`, `Te Aroha`, `Te Atatū`) are supported via longest-match alternation. Findings include a `kind` classification (`given`, `surname`, or `given_or_surname` when the same name appears in both lists). Severity is LOW because a personal name alone is not necessarily identifying under the Privacy Act 2020; the signal exists so auditors can apply additional IPP 4 and IPP 8 care to records containing culturally significant te reo Māori identifiers.
 
@@ -38,5 +55,6 @@ Initial scaffold and first detector.
 - GitHub Actions CI: ruff lint + pytest on Python 3.11 and 3.12.
 - Pre-commit hooks for ruff and basic file hygiene.
 
-[Unreleased]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/compare/v0.1.0...v0.7.0
 [0.1.0]: https://github.com/ShahnawazKakarh/nz-privacy-auditor/releases/tag/v0.1.0

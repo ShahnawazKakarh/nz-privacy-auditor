@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nz-privacy-auditor"
-version = "0.1.0"
+version = "0.7.0"
 description = "Privacy Act 2020 compliance auditor for ML datasets — scans CSV / Parquet / HuggingFace datasets and flags NZ-specific PII (IRD, NHI, driver licence, phone, address, te reo names)."
 readme = "README.md"
 requires-python = ">=3.10"

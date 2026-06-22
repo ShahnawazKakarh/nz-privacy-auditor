@@ -26,7 +26,7 @@ Generic PII tools (Presidio, scrubadub, etc.) catch global formats (US SSN, EU p
 
 ## Status
 
-🚧 **Alpha (v0.1.0)** — IRD detector with mod-11 validation is implemented and tested. NHI, driver licence, phone, address, and te reo name detectors are on the roadmap below.
+✅ **v0.7.0** — all six detectors implemented, CSV/Parquet loaders, dataset-level Scanner, CLI, and JSON / console reports are in place. LLM verification pass and HuggingFace loader (optional `[hf]` extra) are the next milestones.
 
 ## Install
 
@@ -39,6 +39,33 @@ Requires Python 3.10+.
 
 ## Quick usage
 
+### CLI
+
+Scan a CSV / Parquet file directly:
+
+```bash
+nz-privacy-auditor scan path/to/data.csv
+nz-privacy-auditor scan path/to/data.parquet --format json --output report.json
+nz-privacy-auditor scan data.csv --detector ird,nhi --min-confidence 0.7
+nz-privacy-auditor scan data.csv --fail-on-finding   # exits 1 if any PII; useful in CI
+```
+
+### Python
+
+```python
+import pandas as pd
+from nz_privacy_auditor import Scanner
+
+df = pd.read_csv("patients.csv")
+result = Scanner().scan_dataframe(df)
+
+print(f"{result.total_findings} findings across {len(result.columns_scanned)} columns")
+for cf in result.findings:
+    print(cf.row, cf.column, cf.finding.detector, cf.finding.value)
+```
+
+A single-detector example:
+
 ```python
 from nz_privacy_auditor.detectors import IRDDetector
 
@@ -48,8 +75,6 @@ for finding in detector.scan("Please reference IRD 49-091-850 on the form."):
 # Finding(detector='ird', severity=<Severity.HIGH: 'high'>, value='49-091-850',
 #         start=17, end=27, confidence=1.0, context={'normalised': '49091850'})
 ```
-
-A dataset-level scanner CLI (`nz-privacy-auditor scan path/to/data.csv`) lands once the detector suite is complete.
 
 ## Detector roadmap
 
@@ -61,7 +86,7 @@ A dataset-level scanner CLI (`nz-privacy-auditor scan path/to/data.csv`) lands o
 | NZ phone            | `+64` / `0x` patterns, mobile prefixes  | MEDIUM   | ✅ v0.4.0      |
 | NZ address          | suffix + suburb / region gazetteer      | MEDIUM   | ✅ v0.5.0      |
 | Te reo Māori names  | macron-aware NER + name list            | LOW      | ✅ v0.6.0      |
-| LLM verification    | Gemini second-pass for ambiguous spans  | —        | ⏳ planned     |
+| LLM verification    | Gemini second-pass for ambiguous spans  | —        | 🟡 next        |
 
 ## Pipeline (planned)
 
