@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "nz-privacy-auditor: Privacy Act 2020 compliance auditor for ML datasets"
+version: 0.1.0
+date-released: 2026-06-22
+authors:
+  - family-names: Khan
+    given-names: Muhammad Shahnawaz
+    email: shahnawaz.jrw@gmail.com
+    orcid: "https://orcid.org/0009-0007-4055-6563"
+    affiliation: Independent Researcher
+    website: "https://www.skakarh.com"
+license: MIT
+repository-code: "https://github.com/ShahnawazKakarh/nz-privacy-auditor"
+keywords:
+  - privacy act 2020
+  - new zealand
+  - pii detection
+  - data privacy
+  - ml datasets
+  - data governance
+  - compliance
+  - ird number
+  - nhi number
+  - te reo maori
+  - responsible ai
+  - dataset auditing
+preferred-citation:
+  type: software
+  title: "nz-privacy-auditor: Privacy Act 2020 compliance auditor for ML datasets"
+  authors:
+    - family-names: Khan
+      given-names: Muhammad Shahnawaz
+      orcid: "https://orcid.org/0009-0007-4055-6563"
+      affiliation: Independent Researcher
+  version: 0.1.0
+  year: 2026
+  month: 6
+  url: "https://github.com/ShahnawazKakarh/nz-privacy-auditor"
