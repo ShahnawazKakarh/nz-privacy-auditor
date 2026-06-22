@@ -6,11 +6,12 @@ All notable changes to this project will be documented in this file. Format roug
 
 ### Added
 
+- **Driver licence detector** — recognises NZ Waka Kotahi | NZ Transport Agency driver licence numbers in the format `[A-Z]{2}\d{6}` (e.g. `BQ739482`). NZTA does not publish a check-digit algorithm, so the detector applies a 300-character keyword-proximity heuristic (matching the Microsoft Purview NZ DLP rule): findings near keywords *licence*, *license*, *driver*, *DL* (uppercase), *NZTA*, or *Waka Kotahi* receive confidence 0.9; bare pattern matches receive confidence 0.5. 12 tests covering keyword variants, proximity boundary, case sensitivity, and shape rejection.
+
 - **NHI (National Health Index) detector** — recognises both the legacy `AAANNNC` (mod-11 numeric check digit) and new `AAANNAX` (mod-23 alphabetic check digit) formats per HISO 10046:2024. Uses the 24-letter NHI alphabet (A–Z excluding I and O) with weights `(7, 6, 5, 4, 3, 2)`. Only checksum-validated matches are emitted. Test vectors drawn from Health NZ \| Te Whatu Ora's published format-change examples (`ZAA0067`, `ZAA0075`, `ZAA0083` for legacy; `ACA31FM`, `ASE37QK`, `ARE62RS` for new). Case-insensitive matching with normalised uppercase in the finding context.
 
 ### Planned
 
-- NZ driver licence detector (`[A-Z]{2}\d{6}` with context window).
 - NZ phone detector (`+64`, `0x`, mobile prefixes `021/022/027`).
 - NZ address detector (street suffix + suburb / region gazetteer).
 - Te reo Māori name detector (macron-aware NER + curated name list).
